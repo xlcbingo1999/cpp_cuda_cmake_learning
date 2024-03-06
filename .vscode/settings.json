@@ -1,0 +1,8 @@
+{
+    "cmake.configureArgs": [
+        "-DMONO_PATH=/usr"
+    ],
+    "files.associations": {
+        "iostream": "cpp"
+    }
+}

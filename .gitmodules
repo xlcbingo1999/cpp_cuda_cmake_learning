@@ -1,0 +1,6 @@
+[submodule "3rdlibs/glfw"]
+	path = 3rdlibs/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "3rdlibs/tomlplusplus"]
+	path = 3rdlibs/tomlplusplus
+	url = git@github.com:marzer/tomlplusplus.git
