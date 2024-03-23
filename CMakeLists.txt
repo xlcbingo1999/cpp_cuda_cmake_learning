@@ -10,15 +10,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(engine_name engine)
 
-add_subdirectory(3rdlibs)
-add_subdirectory(engine)
-add_subdirectory(sandbox)
+# add_subdirectory(3rdlibs)
+# add_subdirectory(engine)
+# add_subdirectory(sandbox)
+# add_subdirectory(interface)
+add_subdirectory(helloworld)
 
 # 先把测试关掉
-option(ENGINE_BUILD_TEST "should build unittest" ON)
+# option(ENGINE_BUILD_TEST "should build unittest" ON)
 
-if (ENGINE_BUILD_TEST)
-    include(CTest)
-    enable_testing()
-    add_subdirectory(test)
-endif()
+# if (ENGINE_BUILD_TEST)
+#     include(CTest)
+#     enable_testing()
+#     add_subdirectory(test)
+# endif()
