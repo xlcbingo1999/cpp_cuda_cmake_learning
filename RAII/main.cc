@@ -1,11 +1,17 @@
 #include "file.h"
 #include "mutex.h"
+#include "shared_ptr_used.h"
+#include "weak_ptr_used.h"
+#include "shared_ptr_outside.h"
+#include "simple_shared_ptr.h"
 #include <iostream>
 #include <mutex>
 #include <thread>
 
 std::mutex mtx;
 int shared_data = 0;
+
+
 
 void increment() {
     for (int i = 0; i < 10000; i++) {
@@ -31,4 +37,58 @@ int main() {
     t2.join();
     
     std::cout << "Shared data: " << shared_data << std::endl;
+
+    { // 多写作用域区间对提升代码有帮助
+        // make_shared<T>() 是工厂模式, 根据T模板确定返回的类型
+        std::shared_ptr<RAII::SharedPtrUsed> sharedptrused = std::make_shared<RAII::SharedPtrUsed>();
+        {
+            std::shared_ptr<RAII::SharedPtrUsed> ptr2 = sharedptrused; // 利用赋值构造函数去创建了新的智能指针, 指向同一个区域, 不会去拷贝一个新的空间
+            sharedptrused->doSth();
+            ptr2->doSth();
+
+            std::cout << "use_count: " << sharedptrused.use_count() << std::endl;
+        }
+        std::cout << "use_count: " << sharedptrused.use_count() << std::endl;
+
+        
+        // 指针的operator bool()重载方法, 用于检查指针是否为空
+        if (sharedptrused) {
+            std::cout << "sharedptrused not null" << std::endl;
+        } else {
+            std::cout << "sharedptrused is null" << std::endl;
+        }
+
+        // 释放指针的所有权, 将指针的内容设置为nullptr
+        sharedptrused.reset();
+
+        std::shared_ptr<int> ptrint1 = std::make_shared<int>(42);
+        std::shared_ptr<int> ptrint2 = std::make_shared<int>(21);
+        // 用于交换两个指针的内容, 在写排序算法的时候应该会很有用
+        ptrint1.swap(ptrint2);
+        // operator* 重载操作符可以获取指针指向的对象
+        std::cout << "*ptrint1: " << *ptrint1 << "; *ptrint2: " << *ptrint2 << std::endl; 
+    }
+
+    {
+        // 模拟循环引用的场景, 析构函数不会被调用
+        std::shared_ptr<RAII::PtrA> a = std::make_shared<RAII::PtrA>();
+        std::shared_ptr<RAII::PtrB> b = std::make_shared<RAII::PtrB>();
+        a->b_ptr = b;
+        b->a_ptr = a;
+    }
+
+    {
+        int ini = 10;
+        auto d{RAII::SomeData::Create(ini)};
+        d->NeedCallSomeAPI();
+    }
+
+    {
+        RAII::SimpleSharedPtr<RAII::MyClass> ptr1(new RAII::MyClass); // 调用自定义构造函数
+        {
+            RAII::SimpleSharedPtr<RAII::MyClass> ptr2 = ptr1; // 调用赋值构造函数
+            std::cout << "ptr1.use_count(): " << ptr1.use_count() << std::endl;
+        }
+        std::cout << "ptr1.use_count(): " << ptr1.use_count() << std::endl;
+    }
 }
