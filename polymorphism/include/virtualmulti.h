@@ -4,7 +4,10 @@
 namespace VirturalMulti {
     class TempBase {
     public:
-        TempBase(int _t);
+        // 构造函数不能是虚函数
+        // 1. 构造函数还没调用之前，此时class还没初始化好虚函数表
+        // 2. 构造函数是会被自动调用的，没必要进行虚函数重写Override
+        TempBase(int _t); 
         ~TempBase();
         void print();
     // private:

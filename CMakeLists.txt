@@ -15,7 +15,7 @@ set(engine_name engine)
 # add_subdirectory(sandbox)
 # add_subdirectory(interface)
 # add_subdirectory(helloworld)
-# add_subdirectory(polymorphism)
+add_subdirectory(polymorphism)
 add_subdirectory(RAII)
 
 

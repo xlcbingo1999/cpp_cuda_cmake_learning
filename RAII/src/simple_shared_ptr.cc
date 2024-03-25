@@ -79,5 +79,6 @@ namespace RAII {
     }
 
     // 必须在定义的时候就先声明特化类型, 这样才不会报找不到符号的错误
+    // 参考文献: https://itachi666.github.io/posts/bfee53d1/
     template class SimpleSharedPtr<MyClass>;
 };

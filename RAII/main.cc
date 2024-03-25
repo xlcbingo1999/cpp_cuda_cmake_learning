@@ -4,6 +4,9 @@
 #include "weak_ptr_used.h"
 #include "shared_ptr_outside.h"
 #include "simple_shared_ptr.h"
+#include "pod.h"
+#include "deepcopy.h"
+#include "rightvalue.h"
 #include <iostream>
 #include <mutex>
 #include <thread>
@@ -90,5 +93,37 @@ int main() {
             std::cout << "ptr1.use_count(): " << ptr1.use_count() << std::endl;
         }
         std::cout << "ptr1.use_count(): " << ptr1.use_count() << std::endl;
+    }
+
+    {
+        RAII::PodClass* pod = RAII::GetClass(1, 2, 'c');
+        std::cout << pod->a << " " << pod->b << " " << pod->addr << std::endl;
+    }
+
+    {
+        RAII::DeepCopyClass a("beijing");
+        a.print();
+        RAII::DeepCopyClass b("shanghai");
+        b.print();
+        a = b;
+        a.print();
+
+        b.setstring("hangzhou").setstring("guangzhou");
+        b.print();
+
+        RAII::DeepCopyClass c(a);
+        c.print();
+    }
+
+    { // 右值, 移动构造, 完美转发
+        RAII::rightValueFunc();
+
+        RAII::Array* a = new RAII::Array(2);
+        a->setData(2, 4, 5);
+        a->print();
+
+        RAII::Array b(std::move(*a)); // 右值赋值后, a就变成空了
+        delete a; // 手动释放a对应的内存, 此时a变成一个悬空指针
+        b.print(); // 此时b接管了a的内存空间
     }
 }
