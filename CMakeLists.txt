@@ -18,7 +18,10 @@ add_subdirectory(helloworld)
 add_subdirectory(polymorphism)
 add_subdirectory(RAII)
 add_subdirectory(socket)
-
+add_subdirectory(vector)
+add_subdirectory(pthread_atomic_volatile)
+add_subdirectory(async)
+add_subdirectory(threadpool)
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)
