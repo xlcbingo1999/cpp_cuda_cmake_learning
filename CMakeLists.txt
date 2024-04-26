@@ -22,6 +22,8 @@ add_subdirectory(vector)
 add_subdirectory(pthread_atomic_volatile)
 add_subdirectory(async)
 add_subdirectory(threadpool)
+add_subdirectory(openmp)
+# add_subdirectory(pythonbind) # 有问题
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)
