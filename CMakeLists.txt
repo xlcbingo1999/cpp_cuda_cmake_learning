@@ -24,6 +24,7 @@ add_subdirectory(async)
 add_subdirectory(threadpool)
 add_subdirectory(openmp)
 # add_subdirectory(pythonbind) # 有问题
+add_subdirectory(designmode)
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)
