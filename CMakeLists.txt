@@ -25,6 +25,7 @@ add_subdirectory(threadpool)
 add_subdirectory(openmp)
 # add_subdirectory(pythonbind) # 有问题
 add_subdirectory(designmode)
+add_subdirectory(cuda_zero_copy)
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)

@@ -1,0 +1,4 @@
+find_package(CUDA REQUIRED)
+
+cuda_add_executable(cuda_zero_copy cuda_zero_copy.cu)
+cuda_add_executable(thread_block_grid thread_block_grid.cu)
