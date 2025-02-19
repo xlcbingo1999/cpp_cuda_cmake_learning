@@ -4,3 +4,6 @@
 [submodule "3rdlibs/tomlplusplus"]
 	path = 3rdlibs/tomlplusplus
 	url = git@github.com:marzer/tomlplusplus.git
+[submodule "3rdlibs/json"]
+	path = 3rdlibs/json
+	url = git@github.com:nlohmann/json.git
