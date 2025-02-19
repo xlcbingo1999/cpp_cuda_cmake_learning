@@ -1,6 +1,7 @@
 #include <functional>
 #include <vector>
 #include <omp.h>
+#include <cstdio>
 #include "lock.h"
 
 

@@ -3,7 +3,7 @@
 
 #include <limits>
 
-#define CGMATH_NUMERIC_TYPE double
+// #define CGMATH_NUMERIC_TYPE double
 #include "core/cgmath.h"
 
 #define CATCH_CONFIG_MAIN

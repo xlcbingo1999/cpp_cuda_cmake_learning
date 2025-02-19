@@ -23,6 +23,8 @@ add_subdirectory(pthread_atomic_volatile)
 add_subdirectory(async)
 add_subdirectory(threadpool)
 add_subdirectory(openmp)
+add_subdirectory(stream)
+
 # add_subdirectory(pythonbind) # 有问题
 add_subdirectory(designmode)
 add_subdirectory(cuda_zero_copy)

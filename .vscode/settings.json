@@ -76,6 +76,16 @@
         "list": "cpp",
         "unordered_set": "cpp",
         "scoped_allocator": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "coroutine": "cpp",
+        "numbers": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "stop_token": "cpp",
+        "__nullptr": "cpp",
+        "locale": "cpp",
+        "__functional_base": "cpp"
     }
 }
