@@ -24,6 +24,7 @@ add_subdirectory(async)
 add_subdirectory(threadpool)
 add_subdirectory(openmp)
 add_subdirectory(stream)
+add_subdirectory(bound)
 
 # add_subdirectory(pythonbind) # 有问题
 add_subdirectory(designmode)
