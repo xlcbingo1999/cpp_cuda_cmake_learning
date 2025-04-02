@@ -29,6 +29,7 @@ add_subdirectory(bound)
 # add_subdirectory(pythonbind) # 有问题
 add_subdirectory(designmode)
 add_subdirectory(cuda_zero_copy)
+add_subdirectory(crtp)
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)
