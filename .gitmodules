@@ -7,3 +7,9 @@
 [submodule "3rdlibs/json"]
 	path = 3rdlibs/json
 	url = git@github.com:nlohmann/json.git
+[submodule "3rdlibs/folly"]
+	path = 3rdlibs/folly
+	url = git@github.com:facebook/folly.git
+[submodule "3rdlibs/fast_float"]
+	path = 3rdlibs/fast_float
+	url = git@github.com:fastfloat/fast_float.git
