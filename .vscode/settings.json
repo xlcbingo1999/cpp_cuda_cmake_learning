@@ -93,5 +93,6 @@
         "__tuple": "cpp",
         "__bit_reference": "cpp",
         "filesystem": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled",
 }

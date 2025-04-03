@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(
     engine
-    LANGUAGES CXX
+    LANGUAGES CUDA CXX
     VERSION 0.1.0
 )
 
@@ -28,7 +28,7 @@ add_subdirectory(bound)
 
 # add_subdirectory(pythonbind) # 有问题
 add_subdirectory(designmode)
-add_subdirectory(cuda_zero_copy)
+add_subdirectory(cuda_run)
 add_subdirectory(crtp)
 add_subdirectory(fast_float_test)
 add_subdirectory(folly_use)
