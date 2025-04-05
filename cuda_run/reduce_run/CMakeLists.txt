@@ -1,4 +1,4 @@
-set(targets reduce_0 reduce_1 reduce_2)
+set(targets reduce_0 reduce_1 reduce_2 reduce_3)
 
 foreach(var IN LISTS targets)
     add_executable(${var} ${var}.cu)

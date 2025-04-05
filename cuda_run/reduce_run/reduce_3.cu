@@ -16,14 +16,11 @@ __global__ void reduce_2(float *d_input, float *d_output) {
     }
     __syncthreads(); // 因为拷贝到shared memory也是并行化操作，所以需要同步thread
     
-    for (int i = 1; i < blockDim.x; i = i * 2) {
+    // 避免让两个thread同时处理一个wrap中的bank，因此每次都是跨很大的距离进行求和
+    for (int i = blockDim.x / 2; i > 0; i = i / 2) {
         // 这个操作就是让前面一半的thread都进入if逻辑，后面一半的thread不进入if逻辑
-        if (threadIdx.x * (2 * i) < blockDim.x) {
-            // 进入if逻辑后，每个thread其实不一定要处理对应位置的内存，因为毕竟还是shared memory
-            // 因此在第一层： thread0 处理的是 0+1 => 放到0, thread1 处理的是 2+3 => 放到2, thread2 处理的是 4+5 => 放到4, thread3 处理的是 6+7 => 放到6
-            // 在第二层: thread0处理的是 0+2 => 放到0, thread1 处理的是 4+6 => 放到4
-            int index = threadIdx.x * (2 * i);
-            shared_d_input[index] += shared_d_input[index + i];
+        if (threadIdx.x < i) {
+            shared_d_input[threadIdx.x] += shared_d_input[threadIdx.x + i];
         }
         __syncthreads();
     }
