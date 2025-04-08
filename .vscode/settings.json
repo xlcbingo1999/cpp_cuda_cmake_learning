@@ -1,6 +1,7 @@
 {
     "cmake.configureArgs": [
-        "-DMONO_PATH=/usr"
+        "-DMONO_PATH=/usr",
+        "-DCMAKE_BUILD_TYPE=Debug"
     ],
     "files.associations": {
         "iostream": "cpp",
@@ -92,7 +93,21 @@
         "__debug": "cpp",
         "__tuple": "cpp",
         "__bit_reference": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__errc": "cpp",
+        "__hash_table": "cpp",
+        "__locale": "cpp",
+        "__mutex_base": "cpp",
+        "__node_handle": "cpp",
+        "__split_buffer": "cpp",
+        "__string": "cpp",
+        "__threading_support": "cpp",
+        "__tree": "cpp",
+        "ios": "cpp",
+        "queue": "cpp",
+        "semaphore": "cpp",
+        "__functional_03": "cpp",
+        "*.ipp": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
 }

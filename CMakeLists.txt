@@ -32,6 +32,7 @@ add_subdirectory(cuda_run)
 add_subdirectory(crtp)
 add_subdirectory(fast_float_test)
 add_subdirectory(folly_use)
+add_subdirectory(coroutine_use)
 
 # 先把测试关掉
 option(ENGINE_BUILD_TEST "should build unittest" ON)
