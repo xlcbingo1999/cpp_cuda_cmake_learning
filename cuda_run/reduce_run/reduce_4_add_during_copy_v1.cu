@@ -1,5 +1,4 @@
-// 本代码将使用减少wrap内的判断分化来改造reduce_1.cu，目的是提高GPU执行的效率
-// 核心就是让GPU的一个wrap内的线程的逻辑保持尽可能的一致，而不是让wrap内线程分别处理不同的逻辑
+// 本代码将在数据从global memory拷贝到shared memory时，同时进行一次add操作，让效率更高一些
 
 #include <stdio.h>
 #include <cuda.h>
@@ -9,11 +8,9 @@
 
 __global__ void reduce_2(float *d_input, float *d_output) {
     // 首先, 需要让block中的每个元素都拷贝到shared memory上
-    float *d_input_begin = d_input + blockDim.x * blockIdx.x;
-    __shared__ float shared_d_input[THREAD_PER_BLOCK]; // 需要单独申请一段shared memory空间
-    for (int i = 0; i < blockDim.x; i++) {
-        shared_d_input[i] = d_input_begin[i];
-    }
+    float *d_input_begin = d_input + blockDim.x * blockIdx.x * 2; // 现在一次读取都是跨两个block的
+    __shared__ float shared_d_input[THREAD_PER_BLOCK]; // 需要单独申请一段shared memory空间，大小也不需要变化
+    shared_d_input[threadIdx.x] = d_input_begin[threadIdx.x] + d_input_begin[threadIdx.x + blockDim.x];
     __syncthreads(); // 因为拷贝到shared memory也是并行化操作，所以需要同步thread
     
     // 避免让两个thread同时处理一个wrap中的bank，因此每次都是跨很大的距离进行求和
@@ -42,7 +39,7 @@ bool check(float *output, float *result, int block_num) {
 
 int main() {
     const int N = 2 * 1024 * 1024;
-    int block_num = N / THREAD_PER_BLOCK;
+    int block_num = N / THREAD_PER_BLOCK / 2; // 只需要一半的数据被block覆盖即可
     float *input = (float*)malloc(N * sizeof(float));
     float *d_input;
     cudaMalloc((void**)&d_input, N * sizeof(float));
@@ -55,14 +52,14 @@ int main() {
     float *result = (float*)malloc(block_num * sizeof(float));
     for (int i = 0; i < block_num; i++) {
         float res = 0.0;
-        for (int j = 0; j < THREAD_PER_BLOCK; j++) {
-            res += input[i * THREAD_PER_BLOCK + j];
+        for (int j = 0; j < THREAD_PER_BLOCK * 2; j++) {
+            res += input[i * THREAD_PER_BLOCK * 2 + j];
         }
         result[i] = res;
     }
 
     dim3 Grid(block_num, 1);
-    dim3 Block(THREAD_PER_BLOCK, 1);
+    dim3 Block(THREAD_PER_BLOCK, 1); // 一个block中的thread数量还是不需要变的，只需要让一半的数据被block覆盖即可
 
     cudaMemcpy(d_input, input, N * sizeof(float), cudaMemcpyHostToDevice);
     reduce_2<<<Grid, Block>>>(d_input, d_output);
