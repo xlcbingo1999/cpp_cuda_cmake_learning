@@ -35,6 +35,10 @@ struct Generator {
     
     Generator(Generator &&rhs) noexcept: mHandle(std::exchange(rhs.mHandle, nullptr)) {}
 
+    Generator(Generator &) = delete;
+    Generator &operator=(Generator &) = delete;
+
+
     ~Generator() noexcept {
         if (mHandle) {
             mHandle.destroy();
