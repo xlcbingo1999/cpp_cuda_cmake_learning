@@ -102,4 +102,12 @@ public:
     }
 };
 
+class SharedLooperExecutor: public LooperExecutor { // 只有使用这个executor，才能让所有的coroutine都使用同一个worker_thread
+public:
+    void execute(std::function<void()> &&func) override {
+        static LooperExecutor shared_looper_executor; // 静态变量，使得全局只有一个
+        shared_looper_executor.execute(std::move(func)); // 移动一下变成右值
+    }
+};
+
 #endif //COROUTINEUSE_DISPATCHER_EXECUTOR_H_

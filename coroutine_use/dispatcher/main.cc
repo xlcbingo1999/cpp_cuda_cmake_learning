@@ -4,21 +4,21 @@
 #include "executor.h"
 #include <thread>
 
-Task<int, LooperExecutor> simple_sub_task1() {
+Task<int, SharedLooperExecutor> simple_sub_task1() {
     debug("sub_task1 start ...");
     std::this_thread::sleep_for(std::chrono::seconds(1)) ;
     debug("sub_task1 returns after 1s.");
     co_return 2;
 }
 
-Task<int, LooperExecutor> simple_sub_task2() {
+Task<int, SharedLooperExecutor> simple_sub_task2() {
     debug("sub_task2 start ...");
     std::this_thread::sleep_for(std::chrono::seconds(2)) ;
     debug("sub_task2 returns after 2s.");
     co_return 3;
 }
 
-Task<int, LooperExecutor> simple_task() {
+Task<int, SharedLooperExecutor> simple_task() {
     debug("task start ...");
     auto result1 = co_await simple_sub_task1();
     debug("task from sub_task1: ", result1);
