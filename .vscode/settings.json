@@ -108,7 +108,8 @@
         "semaphore": "cpp",
         "__functional_03": "cpp",
         "*.ipp": "cpp",
-        "target": "cpp"
+        "target": "cpp",
+        "__memory": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
 }
