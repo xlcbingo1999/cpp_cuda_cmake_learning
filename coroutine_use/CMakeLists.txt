@@ -12,3 +12,4 @@ foreach(var IN LISTS single_srcs)
 endforeach()
 
 add_subdirectory(task)
+add_subdirectory(dispatcher)
