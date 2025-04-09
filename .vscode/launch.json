@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "enter program name, for example ${workspaceFolder}/a.out",
+            "program": "/home/netlab/xlc_interview/project/example_cmake_engine/build/coroutine_use/functional_seq",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

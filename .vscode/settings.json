@@ -107,7 +107,8 @@
         "queue": "cpp",
         "semaphore": "cpp",
         "__functional_03": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "target": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
 }
