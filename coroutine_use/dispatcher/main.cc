@@ -1,6 +1,7 @@
 #include "executor.h"
 #include "utils.h"
 #include "task.h"
+#include "channel.h"
 #include "executor.h"
 
 Task<int, AsyncExecutor> simple_sub_task1() {
@@ -68,9 +69,48 @@ void run_sleep_executor() {
     executor.join();
 }
 
+Task<void, LooperExecutor> Producer(Channel<int> &channel) {
+    int i = 0;
+    while (i < 10) {
+        debug("send: ", i);
+        
+        co_await (channel << i++);
+        co_await std::chrono::milliseconds(300); 
+    }
+
+    channel.close();
+    debug("close channel, exit.")
+}
+
+Task<void, LooperExecutor> Consumer(Channel<int> &channel) {
+    while (channel.is_active()) {
+        try {
+            int receive;
+            co_await (channel >> receive);
+            debug("receive: ", receive);
+            co_await std::chrono::milliseconds(2000); 
+        } catch (std::exception &e) {
+            debug("exception: ", e.what());
+        }
+    }
+
+    debug("exit consumer")
+}
+
+void run_channel() {
+    auto channel = Channel<int>(2);
+    auto producer = Producer(channel);
+    auto consumer = Consumer(channel);
+
+    producer.get_result();
+    consumer.get_result();
+}
+
 int main() {
-    run_simple_task();
-    run_sleep_executor();
+    // run_simple_task();
+    // run_sleep_executor();
+
+    run_channel();
 
     return 0;
 }
