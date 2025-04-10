@@ -1,6 +1,7 @@
 #ifndef COROUTINEUSE_DISPATCHER_EXECUTOR_H_
 #define COROUTINEUSE_DISPATCHER_EXECUTOR_H_
 
+#include "delayed_executable.h"
 #include <functional>
 #include <thread>
 #include <future>
@@ -107,6 +108,91 @@ public:
     void execute(std::function<void()> &&func) override {
         static LooperExecutor shared_looper_executor; // 静态变量，使得全局只有一个
         shared_looper_executor.execute(std::move(func)); // 移动一下变成右值
+    }
+};
+
+class SleepExecutor {
+public:
+    SleepExecutor() {
+        is_active.store(true, std::memory_order_relaxed);
+        work_thread = std::thread(&SleepExecutor::run_loop, this);
+    }
+
+    ~SleepExecutor() {
+        shutdown(false);
+        join();
+    }
+
+    void execute(std::function<void()> &&func, long long delay) {
+        delay = delay < 0 ? 0 : delay;
+        std::unique_lock lock(queue_lock);
+    
+        if (is_active.load(std::memory_order_relaxed)) {
+            bool need_notify = executable_queue.empty() || executable_queue.top().get_delay_time() > delay;
+            executable_queue.push(DelayedExecutable(std::move(func), delay));
+            lock.unlock();
+            if (need_notify) {
+                queue_condition.notify_one();
+            }
+        }
+    }
+    
+    void shutdown(bool need_wait_finished = true) {
+        is_active.store(false, std::memory_order_relaxed);
+        if (!need_wait_finished) {
+            // 直接清空队列
+            std::unique_lock lock(queue_lock);
+            decltype(executable_queue) empty_queue;
+            std::swap(executable_queue, empty_queue);
+            lock.unlock();
+        }
+        queue_condition.notify_all();
+    }
+
+    void join() {
+        if (work_thread.joinable()) {
+            work_thread.join();
+        }
+    }
+private:
+    std::priority_queue<DelayedExecutable, std::vector<DelayedExecutable>, DelayedExecutableCompare> executable_queue;
+    std::mutex queue_lock;
+    std::condition_variable queue_condition;
+    
+    std::atomic<bool> is_active;
+    std::thread work_thread;
+
+    void run_loop() {
+        while (is_active.load(std::memory_order_relaxed) || !executable_queue.empty()) {
+            // 获取锁
+            std::unique_lock lock(queue_lock);
+            // double-check
+            if (executable_queue.empty()) {
+                // 等待任务到达，等待通知的操作，因此当队列从空到非空，需要notify
+                queue_condition.wait(lock);
+
+                // 如果收到的事件是关闭事件，需要额外处理
+                if (executable_queue.empty()) {
+                    continue;
+                }
+            }
+
+            auto executable = executable_queue.top();
+            long long delay = executable.get_delay_time();
+            if (delay > 0) { // 此时还不可以执行，直接wait delay的事件，如果在delay前收到别的事件，则需要额外处理
+                // 这是一个非常优雅的操作，只需要阻塞一个thread即可实现sleep操作！
+                auto status = queue_condition.wait_for(lock, std::chrono::milliseconds(delay));
+
+                if (status != std::cv_status::timeout) {
+                    // 如果收到的事件不是timeout，说明队列可能进入了优先级更高的任务，需要优先处理，因此这里continue出去即可
+                    continue;
+                }
+            }
+            // 如果没有delay，或者已经wait delay的时间后
+            executable_queue.pop(); // 出队
+            lock.unlock();
+            executable(); // 执行任务
+        }
     }
 };
 

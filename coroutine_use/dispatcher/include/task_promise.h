@@ -2,6 +2,7 @@
 #define COROUTINEUSE_DISPATCHER_TASKPROMISE_H_
 
 #include "result.h"
+#include "sleep_awaiter.h"
 #include "task_awaiter.h"
 #include "dispatcher_awaiter.h"
 #include <condition_variable>
@@ -39,6 +40,12 @@ struct TaskPromise {
     template<typename _ResultType, typename _Executor>
     TaskAwaiter<_ResultType, _Executor> await_transform(Task<_ResultType, _Executor> &&task) {
         return TaskAwaiter<_ResultType, _Executor>(std::move(task), &executor);
+    }
+
+    // 专门给 co_await 1s 写的 await_transform
+    template<typename _Rep, typename _Period>
+    SleepAwaiter await_transform(std::chrono::duration<_Rep, _Period> &&duration) {
+        return SleepAwaiter(&executor, std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
     }
 
     void unhandled_exception() {
