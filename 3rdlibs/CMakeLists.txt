@@ -10,5 +10,6 @@ set(FASTFLOAT_INCLUDE_DIR
 )
 
 add_subdirectory(folly)
+add_subdirectory(cpp-httplib)
 
 include(mono/find_mono.cmake)

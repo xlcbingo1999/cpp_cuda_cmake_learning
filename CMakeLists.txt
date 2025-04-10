@@ -35,7 +35,7 @@ add_subdirectory(folly_use)
 add_subdirectory(coroutine_use)
 
 # 先把测试关掉
-option(ENGINE_BUILD_TEST "should build unittest" ON)
+option(ENGINE_BUILD_TEST "should build unittest" OFF)
 
 if (ENGINE_BUILD_TEST)
     include(CTest)

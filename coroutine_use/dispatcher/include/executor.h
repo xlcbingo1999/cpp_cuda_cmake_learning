@@ -35,6 +35,7 @@ public:
 };
 
 class LooperExecutor: public AbstractExecutor {
+// 这个设计可以实现：当coroutine挂起时，looper线程被释放用于处理别的；当coroutine恢复时，仍然是looper线程进行处理
 private:
     std::atomic<bool> is_active; // 主要是标示executor是否存活
     std::queue<std::function<void()>> executable_queue; // FCFS队列
@@ -60,7 +61,7 @@ private:
             executable_queue.pop();
             lock.unlock();
 
-            func(); // 执行
+            func(); // 执行，如果这里面执行的是一个coroutine，则直接就可以直接结束让其他任务进行执行了
         }
     }
 public:
