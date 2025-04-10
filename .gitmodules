@@ -13,3 +13,6 @@
 [submodule "3rdlibs/fast_float"]
 	path = 3rdlibs/fast_float
 	url = git@github.com:fastfloat/fast_float.git
+[submodule "3rdlibs/cpp-httplib"]
+	path = 3rdlibs/cpp-httplib
+	url = git@github.com:yhirose/cpp-httplib.git
