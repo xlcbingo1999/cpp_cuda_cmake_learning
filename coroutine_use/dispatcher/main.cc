@@ -1,8 +1,11 @@
 #include "executor.h"
+#include "future_awaiter.h"
 #include "utils.h"
 #include "task.h"
 #include "channel.h"
 #include "executor.h"
+#include <chrono>
+#include <thread>
 
 Task<int, AsyncExecutor> simple_sub_task1() {
     debug("sub_task1 start ...");
@@ -106,11 +109,36 @@ void run_channel() {
     consumer.get_result();
 }
 
+template <typename R>
+FutureAwaiter<R> as_awaiter(std::future<R> &&future) {
+    return FutureAwaiter(std::move(future));
+}
+
+Task<void> FutureTask() {
+    // 很优雅的一个针对future模式的代码，coroutine挂起的时候会启动一个后台thread去执行future
+    // 后台future完成执行后，会让coroutine重新恢复执行
+    auto result = co_await as_awaiter(std::async([]() {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        debug("in future: sleep ok, return");
+        return 1000;
+    }));
+
+    debug("result: ", result);
+}
+
+void run_future() {
+    auto future_task = FutureTask();
+    debug("start future_task ok!");
+    future_task.get_result();
+    debug("future_task get_result ok!");
+}
+
 int main() {
-    // run_simple_task();
-    // run_sleep_executor();
+    run_simple_task();
+    run_sleep_executor();
 
     run_channel();
+    run_future();
 
     return 0;
 }

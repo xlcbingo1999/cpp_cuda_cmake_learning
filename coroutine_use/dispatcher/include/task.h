@@ -5,7 +5,7 @@
 #include "task_promise.h"
 #include <coroutine>
 
-template <typename ResultType, typename Executor>
+template <typename ResultType, typename Executor = NoopExecutor>
 struct Task {
     using promise_type = TaskPromise<ResultType, Executor>;
 
