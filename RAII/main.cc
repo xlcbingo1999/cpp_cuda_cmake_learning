@@ -26,7 +26,7 @@ void increment() {
 }
 
 int main() {
-    RAII::File myFile("/home/netlab/xlc_interview/project/example_cmake_engine/RAII/resource/a.txt");
+    RAII::File myFile("./resource/a.txt");
     if (myFile.getHandle().is_open()) {
         std::cout << "File is open" << std::endl;
     } else {

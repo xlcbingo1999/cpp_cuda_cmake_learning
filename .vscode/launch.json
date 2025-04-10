@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/netlab/xlc_interview/project/example_cmake_engine/build/coroutine_use/functional_seq",
+            "program": "${workspaceRoot}/build/coroutine_use/functional_seq",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -32,7 +32,7 @@
             "name": "CUDA C++: Launch",
             "type": "cuda-gdb",
             "request": "launch",
-            "program": "/home/netlab/xlc_interview/project/example_cmake_engine/build/cuda_run/reduce_run/reduce_2"
+            "program": "${workspaceRoot}/build/cuda_run/reduce_run/reduce_2"
         },
         {
             "name": "CUDA C++: Attach",
